@@ -11,7 +11,7 @@ export default function Nav() {
                 width={70}
                 alt='Brand Logo'
             />
-            <h1>Ticket Help-desk</h1>
+            <h1>Help-desk</h1>
             <Link href='/'>Dashboard</Link>
             <Link href='/tickets'>Tickets</Link>
         </nav>
