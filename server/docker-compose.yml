@@ -1,0 +1,50 @@
+version: "3.8"
+
+services:
+  nginx:
+    image: nginx:1.11.10-alpine
+    ports:
+      - 3000:80
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    env_file:
+      - .env
+    environment:
+      NGINX_SERVER_NAME: ${NGINX_SERVER_NAME}
+  server:
+    container_name: api
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      target: ${ENVIRONMENT}
+    env_file:
+      - .env
+    environment:
+      DATABASEURL: ${DATABASEURL}
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./:/app
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - 5432:5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d ${DB_NAME} -U ${DB_USERNAME}"]
+      interval: 1s
+      timeout: 5s
+      retries: 10
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
+volumes:
+  pgdata:
