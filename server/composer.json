@@ -1,0 +1,16 @@
+{
+    "name": "johnpatrick254/ticket-helpdesk",
+    "description": "ticket support API",
+    "autoload": {
+        "psr-4": {
+            "App\\": "./"
+        }
+    },
+    "authors": [
+        {
+            "name": "johnpatrick254",
+            "email": "jpattrick538@gmail.com"
+        }
+    ],
+    "require": {}
+}
