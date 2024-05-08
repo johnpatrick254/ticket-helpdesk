@@ -10,7 +10,7 @@ require_once dirname(__DIR__) . "/Config/config.php";
 class Database
 {
     private static $instance = null;
-    private $conn;
+    private PDO $conn;
     private $db_host = DB_HOST;
     private $db_name = DB_NAME;
     private $db_port = DB_PORT;
@@ -33,7 +33,7 @@ class Database
             $this->conn = new PDO($dsn, $user, $pwd, $options);
         } catch (PDOException $error) {
             echo $dsn;
-            return print(json_encode(['db connection error' => $error->getMessage()]));
+            die(json_encode(['db connection error' => $error->getMessage()]));
         }
     }
 
