@@ -10,11 +10,13 @@ function runMigration()
     $connection->beginTransaction();
     try {
         //CLEAR SCHEMA IF IT EXISTS
+        $responseResetQuery = $connection->prepare("DROP TABLE IF EXISTS response");
+        $statement = $responseResetQuery->execute();
         $ticketResetQuery = $connection->prepare("DROP TABLE IF EXISTS tickets");
         $statement = $ticketResetQuery->execute();
         $userResetQuery = $connection->prepare("DROP TABLE IF EXISTS users;");
         $statement = $userResetQuery->execute();
-    
+
         //////////////////
         ///USER SCHEMA///
         ////////////////
@@ -44,8 +46,21 @@ function runMigration()
         user_id int REFERENCES users(id)
         );
         ";
-
         $statement = $connection->prepare($ticketSchemaQuery);
+        $statement->execute();
+        ///////////////////
+        ///Response SCHEMA///
+        //////////////////
+
+        $responseQuery = "
+        CREATE TABLE response(
+            id SERIAL PRIMARY KEY,
+            content TEXT NOT NULL,
+            sender_id int REFERENCES users(id),
+            ticket_id  int REFERENCES tickets(id)
+        );
+        ";
+        $statement = $connection->prepare($responseQuery);
         $statement->execute();
 
         //COMMIT TRANSACTION AND END MIGRATION
