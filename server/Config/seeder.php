@@ -34,7 +34,7 @@ function runSeeder()
             $password = '1234';
             $role = 'user';
             if ($x % 2 == 0) {
-                $role = 'admin';
+                $role = 'support';
             }
 
             $user = new UserModel($first_name, $last_name, $email, $password, $role);
@@ -45,7 +45,7 @@ function runSeeder()
 
         //CREATE TICKETS
         foreach ($users as $user) {
-            if ($user->role !== 'admin') {
+            if ($user->role !== 'support') {
                 $totalTickets = random_int(1, 30);
                 for ($x = 0; $x < $totalTickets; $x++) {
                     $title = ucwords($faker->catchPhrase . ' ' . $faker->bs);
