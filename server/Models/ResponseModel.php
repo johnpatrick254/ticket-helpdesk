@@ -2,6 +2,7 @@
 namespace App\Models;
 
 use App\Config\Database;
+use App\Utils\HttpException;
 use PDO;
 use PDOException;
 
@@ -28,13 +29,12 @@ final class ResponseModel extends BaseModel
 
             $stmt->closeCursor();
             $this->id = $connection->lastInsertId();
-            var_dump("\n response id: $this->id  saved successfully\n");
+            echo json_encode(["status" => "response id: $this->id  saved successfully"]);
+
         } catch (PDOException $e) {
             $stmt->closeCursor();
             $connection->rollBack();
-
-            die("error saving response :" . $e->getMessage());
-
+            die(HttpException::handleException(500, "error saving response :" . $e->getMessage()));
         }
     }
 }
