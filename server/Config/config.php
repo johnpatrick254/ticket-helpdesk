@@ -11,3 +11,4 @@ define('DB_USERNAME', $_ENV['DB_USERNAME']);
 define('PASSWORD', $_ENV['PASSWORD']);
 define('DB_NAME', $_ENV['DB_NAME']);
 define('DB_PORT', $_ENV['DB_PORT']);
+define('JWT_KEY', $_ENV['JWT_KEY']);
