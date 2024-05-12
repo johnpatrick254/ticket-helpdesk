@@ -21,7 +21,7 @@ class AuthMiddleware extends BaseMiddleware
                 die(HttpException::handleException(501, $e->getMessage()));
             } catch (\UnexpectedValueException $e) {
                 // errors having to do with JWT signature and claims
-                die(HttpException::handleException(400, $e->getMessage()));
+                die(HttpException::handleException(401, $e->getMessage()));
             }
             $decoded = JWT::decode($token);
         } else {

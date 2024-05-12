@@ -70,8 +70,8 @@ function runMigration()
         id SERIAL PRIMARY KEY,
         title VARCHAR(300) NOT NULL,
         body  TEXT NOT NULL,
-        priority VARCHAR(5) DEFAULT 'low',
-        user_id int REFERENCES users(id),
+        priority VARCHAR(10) DEFAULT 'low',
+        user_id INT REFERENCES users(id) ON DELETE CASCADE,
         date_created TIMESTAMP DEFAULT NOW(),
         last_updated TIMESTAMP DEFAULT NOW(),
         completed_at TIMESTAMP 
@@ -97,8 +97,8 @@ function runMigration()
         CREATE TABLE responses(
             id SERIAL PRIMARY KEY,
             content TEXT NOT NULL,
-            sender_id int REFERENCES users(id),
-            ticket_id  int REFERENCES tickets(id),
+            sender_id INT REFERENCES users(id) ON DELETE CASCADE,
+            ticket_id  INT REFERENCES tickets(id) ON DELETE CASCADE,
             date_created TIMESTAMP DEFAULT NOW()
         );
         ";

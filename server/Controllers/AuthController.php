@@ -3,6 +3,7 @@ namespace App\Controllers;
 
 use App\DTO\Auth\LoginDTO;
 use App\DTO\Auth\RegisterDTO;
+use App\Middlewares\AuthMiddleware;
 use App\Models\UserModel;
 use App\Utils\HttpException;
 use App\Utils\JWT;
@@ -24,7 +25,7 @@ class AuthController extends BaseController
     public static function handleResourceRequest(array $url)
     {
         if (isset($url[3]) && ($url[3] === 'verify') && count($url) < 4) {
-            return self::withMiddleware(['AuthMiddleware'], [self::class, 'handleVerifySignIn']);
+            return self::withMiddleware([AuthMiddleware::class], [self::class, 'handleVerifySignIn']);
         }
         return HttpException::handleException(404, 'Not Found');
     }

@@ -13,10 +13,14 @@ class Router
     }
     public static function withMiddleware(array $middlewares, string $path, BaseRoute $class)
     {
-        foreach ($middlewares as $middleware) {
-            $middleware::activate();
+        $url = array_filter(explode('/', $_SERVER['REQUEST_URI']));
+        $targetPath = array_filter(explode('/', $path));
+        if ($targetPath[1] === $url[2]) {
+            foreach ($middlewares as $middleware) {
+                $middleware::activate();
+            }
+            return self::handleResource($path, $class);
         }
-        return self::handleResource($path, $class);
     }
 
 }
