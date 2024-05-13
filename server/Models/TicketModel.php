@@ -109,19 +109,33 @@ final class TicketModel extends BaseModel
             WHERE id=:id 
         ;";
 
+        $ticketResponseSQL = "
+            SELECT * FROM responses 
+            WHERE ticket_id=:id 
+            ORDER BY date_created DESC
+        ;";
 
         $stmt = $connection->prepare($sql);
+        $ticketStmt = $connection->prepare($ticketResponseSQL);
+
         try {
-            $stmt->bindValue(":id", intval($id), PDO::PARAM_STR);
+            $stmt->bindValue(":id", $id, PDO::PARAM_STR);
+            $ticketStmt->bindValue(":id", $id, PDO::PARAM_STR);
             $stmt->execute();
-            $ticket = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            if(count($ticket) < 1){
+            $ticketStmt->execute();
+            $ticket = $stmt->fetch(PDO::FETCH_ASSOC);
+            $ticketResponses = $ticketStmt->fetchAll(PDO::FETCH_ASSOC);
+            if (count($ticket) < 1) {
                 return HttpException::handleException(404, "ticket not found");
-            };
+            }
+            ;
             $stmt->closeCursor();
-            echo json_encode($ticket);
+            $ticketStmt->closeCursor();
+            echo json_encode(['ticket' =>$ticket, 'responses' => $ticketResponses]);
 
         } catch (PDOException $e) {
+            $stmt->closeCursor();
+            $ticketStmt->closeCursor();
             return HttpException::handleException(500, "error fetching tickets:" . $e->getMessage());
         }
 
