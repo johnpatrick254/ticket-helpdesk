@@ -1,11 +1,13 @@
 <?php
 namespace App\Routes;
+
 use App\Controllers\TicketController;
 use App\Utils\HttpException;
 
-class TicketRoute extends BaseRoute{
-
-    public static function handleRoute(array $url){
+class TicketRoute extends BaseRoute
+{
+    public static function handleRoute(array $url)
+    {
         $method = $_SERVER['REQUEST_METHOD'];
         switch ($method) {
             case 'GET':

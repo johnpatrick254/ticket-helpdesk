@@ -56,23 +56,23 @@ function runSeeder()
                     $ticket->save();
                     var_dump($ticket);
                     //CREATE RESPONSES
-                    $totalResponses =random_int(7, 15);
+                    $totalResponses = random_int(7, 15);
                     for ($y = 0; $y < $totalResponses; $y++) {
-                        $content = $faker->words(random_int(1, 4),true);
+                        $content = $faker->words(random_int(1, 4), true);
                         $user_id = random_int(1, 200);
                         if ($user_id % 2 !== 0) {
                             $user_id = $user->id;
                         }
                         $ticket_id = $ticket->id;
+                        $response = new ResponseModel($content, $user_id, $ticket_id);
+                        $response->save();
                     }
-                    $response = new ResponseModel($content, $user_id, $ticket_id);
-                    $response->save();
 
                 }
 
             }
         }
-  echo "\n\n SEED WAS SUCCESSFULL \n\n";
+        echo "\n\n SEED WAS SUCCESSFULL \n\n";
     } catch (PDOException $e) {
         $connection->rollBack();
         die(json_encode(['error' => "error running seeder: " + $e->getMessage()]));
