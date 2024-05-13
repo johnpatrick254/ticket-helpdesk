@@ -38,10 +38,9 @@ class TicketController extends BaseController
         $method = $_SERVER['REQUEST_METHOD'];
 
         if ($method === 'GET') {
-            if (isset($url[3]) && strlen($url[3]) < 2 ) {
+            if (isset($url[3]) && is_numeric($url[3])) {
                 $id = $url[3];
                 return self::getTicket($id);
-
             }
             return self::getTickets();
         }
@@ -81,7 +80,7 @@ class TicketController extends BaseController
     {
         $updateTicketDTO = new UpdateTicketDTO($data);
         $updates = $updateTicketDTO->validate();
-       return TicketModel::updateTicket($id, $updates);
+        return TicketModel::updateTicket($id, $updates);
     }
 
     public static function deleteTicket(string $id)
