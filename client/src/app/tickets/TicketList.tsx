@@ -1,28 +1,36 @@
-import { TicketService } from '@/services/TicketService'
+"use client"
+import { useFetchTicketsQuery } from '@/services/api/TicketSlice'
 import Link from 'next/link'
 import React from 'react'
 import { toast } from 'react-toastify'
 
 export default async function TicketList() {
-    const tickets = await TicketService.fetchTickets()
-    if (!tickets) {
-        toast.error('Something went wrong fetching your tickets')
-        return null
+    const { data, isFetching, isSuccess,isError,error } = useFetchTicketsQuery({ limit: 10, page: 1 });
+    if(isError){
+        toast.error('Something went wrong while fetching tickets')
+        console.log(error)
     }
+
     return <>
         {
-            tickets.map(ticket => {
-                return <Link href={`/tickets/${ticket.id}`} key={ticket.id}>
-                    <div  className='card my-5' >
-                        <h3>{ticket.title}</h3>
-                        <p className='truncate'>{ticket.body}</p>
-                        <div className={`pill ${ticket.priority}`}>{ticket.priority} priority</div>
-                    </div>
-                </Link>
-            })
+            (!isFetching && isSuccess)
+            &&
+            (
+                data.tickets.length
+                    ?
+                    data.tickets.map(ticket => {
+                        return <Link href={`/tickets/${ticket.id}`} key={ticket.id}>
+                            <div className='card my-5' >
+                                <h3>{ticket.title}</h3>
+                                <p className='truncate'>{ticket.body}</p>
+                                <div className={`pill ${ticket.priority}`}>{ticket.priority} priority</div>
+                            </div>
+                        </Link>
+                    })
+                    :
+                    <p className='text-center'>There are no open tickets</p>
+            )
         }
-        {
-            (tickets.length == 0) && <p className='text-center'>There are no open tickets</p>
-        }
+
     </>
 }
