@@ -140,6 +140,9 @@ form button {
     absolute bottom-0 right-0 
     rounded-tl-md;
 }
+.sc-aYaIB svg{
+  @apply mx-auto;
+}
 
 /* scrollbar */
 /* width */

@@ -1,28 +1,27 @@
+"use client"
 import React from 'react'
-import TicketForm from '../../create/ticketForm'
-import { TicketService } from '@/services/TicketService';
-import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
+import {TicketForm} from '../../create/ticketForm'
+import {useFetchTicketQuery } from '@/app/_services/api/TicketSlice';
+import { notFound, redirect, useRouter } from 'next/navigation';
+import { toast } from 'react-toastify';
 
-export const dynamicParams = true;
-export async function generateStaticParams() {
-    const tickets = await TicketService.fetchTickets();
-    return tickets?.map(ticket => { return { id: ticket.id } });
-}
 
-export default async function EditTicketPage({params}: {params: {id: string} }) {
+
+export default function EditTicketPage({ params }: { params: { id: string } }) {
     const id = params.id;
-    const path ='/tickets'
-    const ticket = await TicketService.fetchTicketById(id);
+    const { data, isSuccess, isError, error, isLoading } = useFetchTicketQuery({ id });
+    if (isError && (error as { status: number }).status === 404) {
+        notFound()
+    }
+    if (isError) {
+        toast.error('something went wrong fetching the tickets')
+    }
+
 
     return (
         <main>
             <h2 className='text-primary text-center'>Edit Ticket </h2>
-            <TicketForm ticket_title={ticket?.title} ticket_body={ticket?.body} ticket_priority={ticket?.priority} ticket_id ={`${ticket!.id}`} revalidateRoute={async()=>{
-                "use server"
-                revalidatePath('/tickets')
-                redirect(`/tickets`)
-                }} />
+          { isSuccess && <TicketForm title={data.ticket.title} body={data.ticket.body} user_email={data.ticket.user_email} priority={data.ticket.priority} id={`${data.ticket!.id}`}  />}
         </main>
     )
 }

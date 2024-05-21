@@ -1,28 +1,39 @@
 "use client"
 
-import { TicketService } from "@/services/TicketService"
-import { revalidatePath } from "next/cache"
+import { Ticket, useCreateTicketMutation, useUpdateTicketMutation } from "@/app/_services/api/TicketSlice"
+import { getToken } from "@/app/_utills/auth"
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { FC, useState } from "react"
 
 
-export default function TicketForm({ ticket_title, ticket_body, ticket_priority, ticket_id, revalidateRoute }: { revalidateRoute:()=>void,ticket_id?: string, ticket_title?: string, ticket_body?: string, ticket_priority?: string }) {
+export const TicketForm: FC<Pick<Ticket, "body" | "title" | "priority" | "id" | "user_email">> = ({ title, body, priority, id, user_email }) => {
+
   const router = useRouter()
-
-  const [title, setTitle] = useState(ticket_title ?? '')
-  const [body, setBody] = useState(ticket_body ?? '')
-  const [priority, setPriority] = useState(ticket_priority ?? 'low')
-  const [isLoading, setIsLoading] = useState(false)
-
+  const [ticket_title, setTitle] = useState(title ?? '')
+  const [ticket_body, setBody] = useState(body ?? '')
+  const [ticket_priority, setPriority] = useState(priority ?? 'low')
+  const [isLoading, setIsLoading] = useState(false);
+  const { "0": create } = useCreateTicketMutation();
+  const { "0": update } = useUpdateTicketMutation()
+  const auth = getToken()
+  let user_id: string;
+  if (auth?.user?.id) {
+    user_id = auth.user.id
+  } else {
+    router.push('/login');
+    return null;
+  }
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault()
     setIsLoading(true)
-    const newTicket = { title, body, priority, user_email: 'mario@netninja.dev' }
-    const res = await TicketService.modifyTicket({ ...newTicket, id: ticket_id });
-    if (res.status == 200) {
-      await revalidateRoute()
-    };
 
+    if (id) {
+      update({ id, title: ticket_title, body: ticket_body, priority: ticket_priority });
+      router.push(`/tickets/${id}`);
+    } else {
+      create({ title: ticket_title, body: ticket_body, priority: ticket_priority, user_id, user_email });
+      router.push('/tickets');
+    }
 
   }
 
@@ -34,7 +45,7 @@ export default function TicketForm({ ticket_title, ticket_body, ticket_priority,
           required
           type="text"
           onChange={(e) => setTitle(e.target.value)}
-          value={title}
+          value={ticket_title}
         />
       </label>
       <label>
@@ -42,7 +53,7 @@ export default function TicketForm({ ticket_title, ticket_body, ticket_priority,
         <textarea
           required
           onChange={(e) => setBody(e.target.value)}
-          value={body}
+          value={ticket_body}
           rows={7}
 
         />
@@ -50,20 +61,21 @@ export default function TicketForm({ ticket_title, ticket_body, ticket_priority,
       <label>
         <span>Priority:</span>
         <select
-          onChange={(e) => setPriority(e.target.value)}
-          value={priority}
+          onChange={(e) => setPriority(e.target.value as "low" | "medium" | "high" | "completed")}
+          value={ticket_priority}
         >
           <option value="low">Low Priority</option>
           <option value="medium">Medium Priority</option>
           <option value="high">High Priority</option>
+          <option value="completed">Completed</option>
         </select>
       </label>
       <button
         className="btn-primary"
         disabled={isLoading}
       >
-        {isLoading && <span>{ticket_id ? 'Updating' : "Adding"}...</span>}
-        {!isLoading && <span>{ticket_id ? 'Update' : "Add"} Ticket</span>}
+        {isLoading && <span>{id ? 'Updating' : "Adding"}...</span>}
+        {!isLoading && <span>{id ? 'Update' : "Add"} Ticket</span>}
       </button>
     </form>
   )
