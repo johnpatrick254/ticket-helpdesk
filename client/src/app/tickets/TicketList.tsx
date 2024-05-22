@@ -5,6 +5,7 @@ import Link from 'next/link'
 import React, { useState } from 'react'
 import { toast } from 'react-toastify'
 import { CustomPagination } from '../components/custompagination'
+import TicketSkeleton from '../components/ticketskeletn'
 
 export default function TicketList() {
     const auth = getToken();
@@ -39,38 +40,47 @@ export default function TicketList() {
     }
     return <>
         {
-            (!isFetching && isSuccess)
-            &&
-            (
-                data.tickets.length
-                    ?
-                    <>
-                        <div className='flex w-max space-x-2'>
-                            <button onClick={() => setFilter('active')} className='pill bg-primary text-white'>Active</button>
-                            <button onClick={() => setFilter('completed')} className='pill bg-primary text-white'>Completed</button>
-                        </div>
-                        {tickets.map(ticket => {
-                            return <Link href={`/tickets/${ticket.id}`} key={ticket.id}>
-                                <div className='card my-5' >
-                                    <h3>{ticket.title}</h3>
-                                    <p className='truncate'>{ticket.body}</p>
-                                    <div className={`pill ${ticket.priority}`}>
-                                        {
-                                            (ticket.priority === "completed")
-                                                ?
-                                                <p className="font-bold">{ticket.priority}</p>
-                                                :
-                                                `${ticket.priority} priority`
-                                        }
+            (isFetching && !isSuccess)
+                ?
+                <>
+                    <TicketSkeleton key={1} />
+                    <TicketSkeleton key={2} />
+                    <TicketSkeleton key={3} />
+                    <TicketSkeleton key={4} />
+                    <TicketSkeleton key={5} />
+                    <TicketSkeleton key={6} />
+                </>
+                :
+                (
+                    data.tickets.length
+                        ?
+                        <>
+                            <div className='flex w-max space-x-2'>
+                                <button onClick={() => setFilter('active')} className='pill bg-primary text-white'>Active</button>
+                                <button onClick={() => setFilter('completed')} className='pill bg-primary text-white'>Completed</button>
+                            </div>
+                            {tickets.map(ticket => {
+                                return <Link href={`/tickets/${ticket.id}`} key={ticket.id}>
+                                    <div className='card my-5' >
+                                        <h3>{ticket.title}</h3>
+                                        <p className='truncate'>{ticket.body}</p>
+                                        <div className={`pill ${ticket.priority}`}>
+                                            {
+                                                (ticket.priority === "completed")
+                                                    ?
+                                                    <p className="font-bold">{ticket.priority}</p>
+                                                    :
+                                                    `${ticket.priority} priority`
+                                            }
+                                        </div>
                                     </div>
-                                </div>
-                            </Link>
-                        })}
-                        <CustomPagination setCurrentPage={handlePagination} currentPage={currentPage} lastPage={lastPage}/>
-                    </>
-                    :
-                    <p className='text-center'>There are no open tickets</p>
-            )
+                                </Link>
+                            })}
+                            <CustomPagination setCurrentPage={handlePagination} currentPage={currentPage} lastPage={lastPage} />
+                        </>
+                        :
+                        <p className='text-center'>There are no open tickets</p>
+                )
         }
 
     </>

@@ -109,7 +109,7 @@ export default function TicketPage({ params }: { params: { id: string } }) {
                         <textarea value={text} onChange={e => setText(e.target.value)} placeholder="Enter Text" className='w-full rounded-sm p-2 focus:ring-0 focus:outline-none' name="" id="" rows={3}></textarea>
                         <button disabled={text.length ? false : true} onClick={handleSubmitResponse} className={`btn-primary ml-auto`}>Send</button></div>
                     <div
-                        className='h-80 !overflow-y-scroll scroll'
+                        className='h-80 !overflow-y-scroll space-y-4 scroll'
 
                     >
                         {

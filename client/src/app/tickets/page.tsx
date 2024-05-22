@@ -4,9 +4,14 @@ import TicketList from './TicketList'
 import Loading from './loading'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { useAppSelector } from '../_utills/hooks/redux-hooks'
 
 export default function List() {
   const router = useRouter()
+  const auth = useAppSelector(state => state.auth)
+  if (!auth) {
+    router.push('/login')
+  }
   return <main>
     <nav className='flex justify-between items-center'>
       <div>
