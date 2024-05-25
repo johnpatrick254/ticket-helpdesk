@@ -12,8 +12,9 @@ class TicketController extends BaseController
     public static function handleCollectionRequest(array $url)
     {
         $data = (array) json_decode(file_get_contents('php://input'));
+      
         $method = $_SERVER['REQUEST_METHOD'];
-        if (count($url) < 4) {
+        if (count($url) < 3) {
             if ($method === 'POST') {
                 return self::createTickets($data);
             }
@@ -36,7 +37,6 @@ class TicketController extends BaseController
     public static function handleResourceRequest(array $url)
     {
         $method = $_SERVER['REQUEST_METHOD'];
-
         if ($method === 'GET') {
             if (isset($url[3]) && is_numeric($url[3])) {
                 $id = $url[3];
@@ -51,8 +51,8 @@ class TicketController extends BaseController
     public static function getTickets()
     {
         $user_id = isset($_GET['user_id']) ? $_GET['user_id'] : null;
-        $page = isset($_GET['page']) ? $_GET['page'] : 1;
-        $limit = isset($_GET['limit']) ? $_GET['limit'] : 10;
+        $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
+        $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 10;
 
         return TicketModel::getTickets($page, $limit, $user_id);
 
@@ -73,7 +73,6 @@ class TicketController extends BaseController
 
         $ticket = new TicketModel($title, $body, $priority, $user_id);
         $ticket->save();
-        http_response_code(201);
     }
 
     public static function updateTicket(string $id, array $data)
