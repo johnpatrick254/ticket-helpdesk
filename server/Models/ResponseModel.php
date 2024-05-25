@@ -29,6 +29,8 @@ final class ResponseModel extends BaseModel
 
             $stmt->closeCursor();
             $this->id = $connection->lastInsertId();
+
+            http_response_code(201);
             echo json_encode(["status" => "response id: $this->id  saved successfully"]);
 
         } catch (PDOException $e) {

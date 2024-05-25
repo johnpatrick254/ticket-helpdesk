@@ -33,6 +33,7 @@ final class UserModel extends BaseModel
             $stmt->closeCursor();
             $connection->commit();
 
+            http_response_code(201);
             echo json_encode(["status" => "user id: $this->id  saved successfully"]);
         } catch (PDOException $e) {
             $stmt->closeCursor();
@@ -47,7 +48,7 @@ final class UserModel extends BaseModel
     {
         $db = Database::getDatabaseInstance();
         $connection = $db->getDatabaseConnection();
-        $sql = 'SELECT id,first_name,last_name,email,password FROM users WHERE email = :email;';
+        $sql = 'SELECT id,first_name,last_name,email,password,role FROM users WHERE email = :email;';
         $stmt = $connection->prepare($sql);
         try {
             $stmt->bindValue(':email', $email, PDO::PARAM_STR);

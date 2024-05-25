@@ -31,6 +31,8 @@ final class TicketModel extends BaseModel
             $this->id = $connection->lastInsertId();
             $connection->commit();
             $stmt->closeCursor();
+            
+            http_response_code(201);
             echo json_encode(["status" => "ticket id: $this->id  saved successfully"]);
 
         } catch (PDOException $e) {
@@ -52,7 +54,7 @@ final class TicketModel extends BaseModel
         OFFSET $offset
         ;";
 
-        if (isset($user_id)) {
+        if (isset($user_id) && $user_id != 'null') {
             $sql = "
             SELECT * FROM tickets 
             WHERE user_id=:id 
@@ -64,8 +66,8 @@ final class TicketModel extends BaseModel
 
         $stmt = $connection->prepare($sql);
         try {
-            if (isset($user_id)) {
-                $stmt->bindValue(":id", intval($user_id), PDO::PARAM_INT);
+            if (isset($user_id) && $user_id != 'null') {
+                $stmt->bindValue(":id", intval($user_id), PDO::PARAM_STR);
             }
             $stmt->execute();
             $tickets = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -75,24 +77,24 @@ final class TicketModel extends BaseModel
             SELECT * FROM tickets
             ;";
 
-            if (isset($user_id)) {
+            if (isset($user_id) && $user_id != 'null') {
                 $sql = "
                 SELECT * FROM tickets 
                 WHERE user_id=:id ;
                 ";
-                $stmt->bindValue(":id", $user_id, PDO::PARAM_INT);
+                $stmt->bindValue(":id", $user_id, PDO::PARAM_STR);
             }
 
             $stmt = $connection->prepare($sql);
-            if (isset($user_id)) {
-                $stmt->bindValue(":id", $user_id, PDO::PARAM_INT);
+            if (isset($user_id) && $user_id != 'null') {
+                $stmt->bindValue(":id", $user_id, PDO::PARAM_STR);
             }
             $stmt->execute();
             $totals = $stmt->rowCount();
             $lastPage = ceil($totals / $limit);
 
             $stmt->closeCursor();
-            echo json_encode(["tickets" => $tickets, "current page" => $page, "last page" => $lastPage]);
+            echo json_encode(["tickets" => $tickets, "current_page" => $page, "last_page" => $lastPage]);
 
         } catch (PDOException $e) {
             return HttpException::handleException(500, "error fetching tickets:" . $e->getMessage());
@@ -105,14 +107,18 @@ final class TicketModel extends BaseModel
         $connection = $db->getDatabaseConnection();
 
         $sql = "
-            SELECT * FROM tickets 
-            WHERE id=:id 
+            SELECT t.*,u.id as user_id,u.email as user_email
+            FROM tickets as t
+            INNER JOIN users as u ON t.user_id = u.id
+            WHERE t.id=:id 
         ;";
 
         $ticketResponseSQL = "
-            SELECT * FROM responses 
-            WHERE ticket_id=:id 
-            ORDER BY date_created DESC
+            SELECT r.*,u.email as user_email
+            FROM responses as r 
+            INNER JOIN users as u ON u.id = r.sender_id 
+            WHERE r.ticket_id=:id 
+            ORDER BY r.date_created ASC
         ;";
 
         $stmt = $connection->prepare($sql);
@@ -125,7 +131,7 @@ final class TicketModel extends BaseModel
             $ticketStmt->execute();
             $ticket = $stmt->fetch(PDO::FETCH_ASSOC);
             $ticketResponses = $ticketStmt->fetchAll(PDO::FETCH_ASSOC);
-            if (count($ticket) < 1) {
+            if (!$ticket || count($ticket) < 1) {
                 return HttpException::handleException(404, "ticket not found");
             }
             ;
