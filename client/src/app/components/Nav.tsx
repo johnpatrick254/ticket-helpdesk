@@ -11,7 +11,7 @@ export default function Nav() {
 
 
     return (
-        <nav className="flex w-full items-center align-middle space-x-3">
+        <nav className="flex flex-wrap w-full items-center align-middle space-x-3">
             <Image
                 src={BrandLogo}
                 width={70}
