@@ -29,6 +29,9 @@ export default function page() {
     if (auth?.token && auth?.user) {
         router.push('/');
     }
+    axios.get(`${BASE_URL}/health`).then(res=>{
+        console.log(`\n ********** server status:${res.data.status} ************\n`)
+    })
     const { register, formState: { errors }, handleSubmit } = useForm({
         resolver: zodResolver(loginSchema), defaultValues: {
             email: 'demo@mail.com',
