@@ -27,12 +27,22 @@
 **Ticket Help-Desk** is a full CRUD ticket support web app built with Nextjs and PHP and Postgres.
 
 ## 🖼️ Screenshots
- <img src="./public/assets/Screenshot 2024-04-14 142736.png" width="100%" height="500">
+
+ <img src="./public/assets/Screenshot 2024-05-22 143244.png" width="100%" height="500">
  <br>
- <img src="./public/assets/Screenshot 2024-04-14 142750.png" width="100%" height="500">
+ <img src="./public/assets/Screenshot 2024-05-22 143427.png" width="100%" height="500">
  <br>
- <img src="./public/assets/Screenshot 2024-04-14 143106.png" width="100%" height="500">
+ <img src="./public/assets/Screenshot 2024-05-22 143821.png" width="100%" height="500">
  <br>
+ <img src="./public/assets/Screenshot 2024-05-22 143537.png" width="100%" height="500">
+ <br>
+ <img src="./public/assets/Screenshot 2024-05-22 143605.png" width="100%" height="500">
+ <br>
+ <img src="./public/assets/Screenshot 2024-05-22 143646.png" width="100%" height="500">
+ <br>
+ <img src="./public/assets/Screenshot 2024-05-22 143730.png" width="100%" height="500">
+ <br>
+  <br>
 
 ## 🛠 Built With <a name="built-with"></a>
 
@@ -43,6 +53,7 @@
 - **Next Auth**
 
 ### Key Features <a name="key-features"></a>
+
 - **Create Tickets**
 - **View Tickets**
 - **Delete Tickets**
@@ -55,6 +66,7 @@
 <!-- LIVE DEMO -->
 
 ## 🚀 Live Demo <a name="[live-demo](#)"></a>
+
 - [Live Demo]([Coming soon](#))
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -88,7 +100,7 @@ npm install
 
 ### Usage
 
-Start  development server:
+Start development server:
 
 ```sh
 npm start

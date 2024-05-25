@@ -1,10 +1,17 @@
+"use client"
 import React, { Suspense } from 'react'
 import TicketList from './TicketList'
 import Loading from './loading'
-import Button from './shared/button'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { useAppSelector } from '../_utills/hooks/redux-hooks'
 
 export default function List() {
+  const router = useRouter()
+  const auth = useAppSelector(state => state.auth)
+  if (!auth) {
+    router.push('/login')
+  }
   return <main>
     <nav className='flex justify-between items-center'>
       <div>
@@ -17,10 +24,12 @@ export default function List() {
             Create Ticket 
           </button>
         </Link>
-
-
+        <button className='btn-primary ' onClick={() => router.back()}>
+          Back
+        </button>
       </div>
     </nav>
+    
     <Suspense fallback={<Loading />}>
       <TicketList />
     </Suspense>
