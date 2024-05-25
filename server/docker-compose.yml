@@ -2,49 +2,75 @@ version: "3.8"
 
 services:
   nginx:
-    image: nginx:1.11.10-alpine
+    build:
+      context: .
+      dockerfile: /nginx/Dockerfile
     ports:
       - 3000:80
     volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf
-    env_file:
-      - .env
-    environment:
-      NGINX_SERVER_NAME: ${NGINX_SERVER_NAME}
-  server:
-    container_name: api
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - api_1
+      - api_2
+      - api_3
+  api_1:
     build:
       context: .
-      dockerfile: ./Dockerfile
-      target: ${ENVIRONMENT}
+      dockerfile: Dockerfile
+      target: ${DOCKER_TARGET}
     env_file:
       - .env
+    volumes:
+      - .:/app
     environment:
-      DATABASEURL: ${DATABASEURL}
+      DOCKER_TARGET: ${DOCKER_TARGET}
     depends_on:
       db:
         condition: service_healthy
+  api_2:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: ${DOCKER_TARGET}
+    env_file:
+      - .env
     volumes:
-      - ./:/app
+      - .:/app
+    environment:
+      DOCKER_TARGET: ${DOCKER_TARGET}
+    depends_on:
+      db:
+        condition: service_healthy
+  api_3:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: ${DOCKER_TARGET}
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    environment:
+      DOCKER_TARGET: ${DOCKER_TARGET}
+    depends_on:
+      db:
+        condition: service_healthy
   db:
-    image: postgres
+    image: postgres:16.3-alpine3.18
     restart: always
     environment:
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_PASSWORD: ${PASSWORD}
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_DB: ${DB_NAME}
     ports:
       - 5432:5432
+    volumes:
+      - app_data:/var/lib/postgresql/data
+
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -d ${DB_NAME} -U ${DB_USERNAME}"]
       interval: 1s
       timeout: 5s
       retries: 10
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8080:8080
-
 volumes:
-  pgdata:
+  app_data:

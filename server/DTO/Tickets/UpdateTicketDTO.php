@@ -19,15 +19,16 @@ class UpdateTicketDTO extends BaseDTO
         $validatedData = [];
         $errors = [];
         foreach ($this->fields as $field) {
-            if ($field === 'title' || $field === 'body') {
-                if (!is_string($this->data[$field])) {
+            if ( isset($this->data[$field]) && ($field === 'title' || $field === 'body')) {
+                if (!is_string($this->data[$field]) ) {
+                    var_dump($this->data[$field]);
                     $errors[$field] = "$field must be of type string";
                 }
                 $validatedData[$field] = $this->data[$field];
             }
-            if ($field === 'priority') {
-                if ($this->data[$field] !== 'low' && $this->data[$field] !== 'high' && $this->data[$field] !== 'completed') {
-                    $errors[$field] = "$field must be either low,high or completed";
+            if ($field === 'priority' && isset($this->data[$field])) {
+                if ($this->data[$field] !== 'low' && $this->data[$field] !== 'medium' && $this->data[$field] !== 'high' && $this->data[$field] !== 'completed') {
+                    $errors[$field] = "$field must be either low,medium,high or completed";
                 }
 
                 $validatedData[$field] = $this->data[$field];

@@ -12,7 +12,7 @@ class ResponseController extends BaseController
     {
         $data = (array) json_decode(file_get_contents('php://input'));
         $method = $_SERVER['REQUEST_METHOD'];
-        if (count($url) < 4 && isset($url[3])) {
+        if (count($url) < 3 && isset($url[3])) {
             if ($method === 'POST') {
                 $id = $url[3];
                 return self::createResponse($id, $data);
@@ -38,7 +38,6 @@ class ResponseController extends BaseController
 
         $response = new ResponseModel($content, $sender_id, $ticket_id);
         $response->save();
-        http_response_code(201);
     }
 
 }

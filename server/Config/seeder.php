@@ -26,6 +26,15 @@ function runSeeder()
 
         //CREATE USERS
 
+        //demo user
+        $first_name = $faker->firstName();
+        $last_name = $faker->lastName();
+        $email = 'demo@mail.com';
+        $password = '1234';
+        $role = 'support';
+
+        $user = new UserModel($first_name, $last_name, $email, $password, $role);
+        $user->save();
         $users = [];
         for ($x = 0; $x < 200; $x++) {
             $first_name = $faker->firstName();

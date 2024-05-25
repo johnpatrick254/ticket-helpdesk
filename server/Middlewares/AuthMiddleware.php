@@ -9,8 +9,8 @@ class AuthMiddleware extends BaseMiddleware
     static function activate()
     {
         $headers = getallheaders();
-        if (isset($headers['Authorization'])) {
-            $authHeader = explode(" ", $headers['Authorization']);
+        if (isset($headers['Authorization']) || isset($headers['authorization'])) {
+            $authHeader = explode(" ", $headers['Authorization'] ?? $headers['authorization']);
             if ($authHeader[0] !== 'Bearer' || !isset($authHeader[1])) {
             }
             $token=$authHeader[1];
