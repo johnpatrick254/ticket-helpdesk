@@ -44,7 +44,7 @@ export const ticketApi = apiSlice.enhanceEndpoints({ addTagTypes: ['tickets'] })
     endpoints: (builder) => ({
         fetchTickets: builder.query<TicketsResponse, { page: number, limit: number, user_id?: string }>(
             {
-                query: ({ page, limit, user_id = null }) => ({ url: `/tickets/?user_id=${user_id}&page=${page}$limit=${limit}` }),
+                query: ({ page, limit, user_id = null }) => ({ url: `/tickets/?user_id=${user_id}&page=${page}&limit=${limit}` }),
                 providesTags: (result = { tickets: [], last_page: 1, current_page: 1 }, _error, _arg) => [
                     'tickets',
                     ...result.tickets.map(({ id }) => ({ type: 'tickets' as const, id }))
