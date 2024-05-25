@@ -32,15 +32,13 @@ class CreateTicketDTO extends BaseDTO
                 if (!isset($this->data[$field])) {
                     $errors[$field] = "$field must be not be null";
                 }
-                if (!is_int($this->data[$field])) {
-                    $errors[$field] = "$field must be of type number";
-                }
+
                 $validatedData[$field] = $this->data[$field];
             }
 
             if ($field === 'priority') {
-                if ($this->data[$field] !== 'low' && $this->data[$field] !== 'high' && $this->data[$field] !== 'completed') {
-                    $errors[$field] = "$field must be either low,high or completed";
+                if ($this->data[$field] !== 'low' && $this->data[$field] !== 'medium' && $this->data[$field] !== 'high' && $this->data[$field] !== 'completed') {
+                    $errors[$field] = "$field must be either low,medium,high or completed";
                 }
 
                 $validatedData[$field] = $this->data[$field];
