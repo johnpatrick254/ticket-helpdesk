@@ -17,7 +17,7 @@ export default function TicketList() {
             user_id = auth.user.id
         }
     }
-    const { data, isFetching, isSuccess, isError, error } = useFetchTicketsQuery({ limit: 10, page: currentPage, user_id });
+    const { data, isFetching, isLoading ,isSuccess, isError, error } = useFetchTicketsQuery({ limit: 10, page: currentPage, user_id });
     if (isError) {
         toast.error('Something went wrong while fetching tickets')
         console.log(error)
@@ -40,7 +40,7 @@ export default function TicketList() {
     }
     return <>
         {
-            (isFetching && !isSuccess)
+            (isLoading)
                 ?
                 <>
                     <TicketSkeleton key={1} />
@@ -52,7 +52,7 @@ export default function TicketList() {
                 </>
                 :
                 (
-                    data.tickets.length
+                    (isSuccess && data.tickets.length)
                         ?
                         <>
                             <div className='flex w-max space-x-2'>
