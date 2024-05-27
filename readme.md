@@ -26,6 +26,15 @@
 
 **Ticket Help-Desk** is a full CRUD ticket support web app built with Nextjs and PHP and Postgres.
 
+## 🛠 Built With <a name="built-with"></a>
+
+- **Nextjs**
+- **TypeScript**
+- **PHP**
+- **Postgres**
+- **Next Auth**
+
+
 ## 🖼️ Screenshots
 
  <img src="./public/assets/Screenshot 2024-05-22 143244.png" width="100%" height="500">
@@ -43,14 +52,6 @@
  <img src="./public/assets/Screenshot 2024-05-22 143730.png" width="100%" height="500">
  <br>
   <br>
-
-## 🛠 Built With <a name="built-with"></a>
-
-- **Nextjs**
-- **TypeScript**
-- **PHP**
-- **Postgres**
-- **Next Auth**
 
 ### Key Features <a name="key-features"></a>
 
